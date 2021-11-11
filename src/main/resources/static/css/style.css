@@ -1,0 +1,43 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+table {
+    width: 800px;
+    border: 1px solid #444444;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #444444;
+}
+
+.board_column {
+    width: 100px;
+}
+
+.btn_area {
+    padding-top: 20px;
+    width: 800px;
+    display: flex;
+    justify-content: right;
+}
+
+.ins_btn{
+    width: 100px;
+    height: 50px;
+    background: #098ddf;
+    color: white;
+    font-size: 18px;
+    border: solid 1px white;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+.replace_btn{
+    width: 100px;
+    height: 50px;
+    background: #e2e2e2;
+    color: #333;
+    font-size: 18px;
+    border: solid 1px white;
+    border-radius: 5px;
+}
