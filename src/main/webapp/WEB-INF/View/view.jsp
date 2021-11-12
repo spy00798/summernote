@@ -25,25 +25,23 @@
             <thead>
             <tr>
                 <th class="board_column">작성일</th>
-                <th>2021-11-11</th>
+                <th><fmt:formatDate value="${board.bdDate}" pattern="yyyy-MM-dd" /></th>
             </tr>
             <tr>
                 <th class="board_column">제목</th>
-                <th>샘플 제목</th>
+                <th>${board.title}</th>
             </tr>
             </thead>
             <tbody>
             <tr>
                 <th class="board_column">내용</th>
-                <td>
-                    <div id="summernote"></div>
-                </td>
+                <td class="view_area">${board.content}</td>
             </tr>
             </tbody>
         </table>
         <div class="btn_area">
-            <input type="button" onclick="location.replace('/')" value="뒤로" class="replace_btn"/>
-            <input type="button" onclick="alert('1')" value="등록" class="ins_btn"/>
+            <input type="button" onclick="history.back();" value="뒤로" class="replace_btn"/>
+            <input type="button" onclick="location.href = '/update?idx=${board.idx}'" value="수정" class="ins_btn"/>
         </div>
     </form>
 </div>

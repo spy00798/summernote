@@ -23,13 +23,10 @@
     <form>
         <table border="1">
             <thead>
-            <tr>
-                <th class="board_column">작성일</th>
-                <th>2021-11-11</th>
-            </tr>
+
             <tr>
                 <th class="board_column">제목</th>
-                <th>샘플 제목</th>
+                <th><input type="text" id="title_slot"></th>
             </tr>
             </thead>
             <tbody>
@@ -43,7 +40,7 @@
         </table>
         <div class="btn_area">
             <input type="button" onclick="location.replace('/')" value="뒤로" class="replace_btn"/>
-            <input type="button" onclick="alert('1')" value="등록" class="ins_btn"/>
+            <input type="button" onclick="insertRow()" value="등록" class="ins_btn"/>
         </div>
     </form>
 </div>

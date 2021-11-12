@@ -16,20 +16,24 @@
     <script src="/resources/js/common.js?a=123"></script>
     <link rel="stylesheet" href="/resources/css/summernote-lite.css?a=123">
     <link rel="stylesheet" href="/resources/css/style.css?a=123">
+    <script>
+        let content = `${board.content}`
+        $(document).ready(function () {
+            $('#summernote').summernote('insertText', conetent);
+        })
+    </script>
 </head>
 <body>
 <%@ include file="./static/header.jsp" %>
 <div id="wrap">
+    <input type="hidden" id="idx" value="${board.idx}">
     <form>
         <table border="1">
             <thead>
-            <tr>
-                <th class="board_column">작성일</th>
-                <th>2021-11-11</th>
-            </tr>
+
             <tr>
                 <th class="board_column">제목</th>
-                <th>샘플 제목</th>
+                <th><input type="text" id="title_slot" value="${board.title}"></th>
             </tr>
             </thead>
             <tbody>
@@ -42,8 +46,9 @@
             </tbody>
         </table>
         <div class="btn_area">
-            <input type="button" onclick="location.replace('/')" value="뒤로" class="replace_btn"/>
-            <input type="button" onclick="alert('1')" value="등록" class="ins_btn"/>
+            <input type="button" onclick="history.back();" value="뒤로" class="replace_btn"/>
+            <input type="button" onclick="deleteRow()" class="del_btn" value="삭제" />
+            <input type="button" onclick="updateRow()" value="완료" class="ins_btn"/>
         </div>
     </form>
 </div>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.summernote.database.mapper.BoardMapper">
+    
+    <select id="findAll" resultType="com.board.summernote.database.dto.BoardDTO">
+        SELECT * FROM tbl_board
+    </select>
+
+    <select id="findByIdx" parameterType="com.board.summernote.database.dto.BoardDTO" resultType="com.board.summernote.database.dto.BoardDTO">
+        SELECT * FROM tbl_board WHERE idx = #{idx}
+    </select>
+
+    <insert id="insertBoard" parameterType="com.board.summernote.database.dto.BoardDTO">
+        INSERT INTO tbl_board(title, content, bd_date) VALUES (#{title}, #{content}, date_format(now(), '%Y%m%d'))
+    </insert>
+
+    <update id="updateByIdx" parameterType="com.board.summernote.database.dto.BoardDTO">
+        UPDATE tbl_board SET title = #{title}, content = #{content} WHERE idx = #{idx}
+    </update>
+
+    <delete id="removeByIdx" parameterType="com.board.summernote.database.dto.BoardDTO">
+        DELETE FROM tbl_board WHERE idx = #{idx}
+    </delete>
+
+</mapper>
