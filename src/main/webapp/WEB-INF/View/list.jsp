@@ -19,7 +19,7 @@
 
 <div id="wrap">
     <div>
-        <table>
+        <table id="main-table">
             <colgroup>
                 <col width="10%">
                 <col width="70%">

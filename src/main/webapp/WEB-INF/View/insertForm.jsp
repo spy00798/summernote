@@ -20,24 +20,15 @@
 <body>
 <%@ include file="./static/header.jsp" %>
 <div id="wrap">
-    <form>
-        <table border="1">
-            <thead>
-
-            <tr>
-                <th class="board_column">제목</th>
-                <th><input type="text" id="title_slot"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <th class="board_column">내용</th>
-                <td>
-                    <div id="summernote"></div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <form enctype="multipart/form-data" id="insertForm">
+        <fieldset>
+            <p class="form-element">제목 : <input type="text" id="title_slot" name="title"></p>
+            <p class="form-element">첨부파일 : <input type="file" accept="image/*" id="ins_file" multiple></p>
+            <ul id="file-list">
+                <%--            <li>1<button class="del_file" onclick="alert('개발 예정')">&#10005;</button></li>       --%>
+            </ul>
+            <div id="summernote" name="content"></div>
+        </fieldset>
         <div class="btn_area">
             <input type="button" onclick="location.replace('/')" value="뒤로" class="replace_btn"/>
             <input type="button" onclick="insertRow()" value="등록" class="ins_btn"/>

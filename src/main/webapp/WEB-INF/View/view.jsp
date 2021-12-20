@@ -40,7 +40,7 @@
             </tbody>
         </table>
         <div class="btn_area">
-            <input type="button" onclick="history.back();" value="뒤로" class="replace_btn"/>
+            <input type="button" onclick="location.href = '/';" value="뒤로" class="replace_btn"/>
             <input type="button" onclick="location.href = '/update?idx=${board.idx}'" value="수정" class="ins_btn"/>
         </div>
     </form>

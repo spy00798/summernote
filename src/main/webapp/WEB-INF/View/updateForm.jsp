@@ -40,7 +40,7 @@
             <tr>
                 <th class="board_column">내용</th>
                 <td>
-                    <div id="summernote"></div>
+                    <div id="summernote">${board.content}</div>
                 </td>
             </tr>
             </tbody>

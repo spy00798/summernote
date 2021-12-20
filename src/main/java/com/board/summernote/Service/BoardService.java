@@ -5,6 +5,7 @@ import com.board.summernote.database.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +33,15 @@ public class BoardService {
         return "insertForm";
     }
 
-    public void BoardInsert(BoardDTO boardDTO) {
+    public void BoardInsert(BoardDTO boardDTO, MultipartFile[] files) {
         boardMapper.insertBoard(boardDTO);
     }
 
     public void BoardDelete(BoardDTO boardDTO) {
         boardMapper.removeByIdx(boardDTO);
+    }
+
+    public void BoardUpdate(BoardDTO boardDTO) {
+        boardMapper.updateByIdx(boardDTO);
     }
 }

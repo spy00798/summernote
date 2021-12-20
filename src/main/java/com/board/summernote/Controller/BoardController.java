@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping(value = "/")
@@ -37,9 +38,15 @@ public class BoardController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/update.do")
+    public void BoardUpdate(BoardDTO boardDTO) {
+        boardService.BoardUpdate(boardDTO);
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/insert.do", method = RequestMethod.POST)
-    public void BoardInsert(BoardDTO boardDTO) {
-         boardService.BoardInsert(boardDTO);
+    public void BoardInsert(BoardDTO boardDTO, MultipartFile[] files) {
+         boardService.BoardInsert(boardDTO, files);
     }
 
     @ResponseBody
