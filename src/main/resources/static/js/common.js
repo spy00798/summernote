@@ -1,7 +1,10 @@
-var fileTemp = [];
+let fileTemp = [];
 let imgExt = /(.*?)\.(jpg|jpeg|png|gif|bmp)$/;
 let url = $(location).attr('href');
 let maxfile = 5;
+let cnt = 0;
+let orgFile = [];
+
 
 
 $(document).ready(function () {
@@ -42,13 +45,13 @@ $(document).ready(function () {
 
                     }
 
-                    let str = '<li>' + item.name + ' (' + sizefmt + ')' + '<button type="button" class="del_file" onclick="deleteFile(this);">&#10005;</button></li>';
+                    let str = '<li id="'+ cnt +'">' + item.name + ' (' + sizefmt + ')' + '<button type="button" class="del_file" onclick="deleteFile(this);">&#10005;</button></li>';
 
                     if(($('#file-list > li').length + 1) <= maxfile) {
                         console.log($('#file-list > li').length);
                         $('#file-list').append(str);
-
                         fileTemp.push(item);
+                        cnt++;
                     } else {
                         alert("파일은 최대 5개까지만 업로드 할 수 있습니다.");
                     }
@@ -109,8 +112,11 @@ $(document).ready(function () {
                         sizefmt = result[i].filesize.toFixed(2) + "B";
 
                     }
-                    let str = '<li>' + result[i].filename + "." + result[i].ext + ' (' + sizefmt + ')' + '<button type="button" class="del_file" onclick="deleteFile(this);">&#10005;</button></li>';
+                    let str = '<li id="'+ cnt +'">' + result[i].filename + "." + result[i].ext + ' (' + sizefmt + ')' + '<button type="button" class="del_file" onclick="deleteFile(this);">&#10005;</button></li>';
                     $('#file-list').append(str);
+
+                    cnt++;
+
                 }
             },
             error: function () {
@@ -127,7 +133,6 @@ function insertRow() {
     data.append('content', $('#summernote').summernote('code'));
     for(var j = 0; j < fileTemp.length; j++) {
         data.append('file', fileTemp[j]);
-
     }
     console.log(data);
 
@@ -161,10 +166,13 @@ function updateRow() {
     formdata.append('idx', $('#idx').val());
     formdata.append('title', $('#title_slot').val());
     formdata.append('content', $('#summernote').summernote('code'));
+    let itemList = document.querySelectorAll("#file-list > li");
+    console.log(fileTemp);
+    [].forEach.call(itemList, item =>{
 
-    for(var j = 0; j < fileTemp.length; j++) {
-        formdata.append('file', fileTemp[j]);
-    }
+    });
+
+    console.log(fileTemp)
     var vaild_t = $('#title_slot').val().trim();
     var vaild_c = $('#summernote').summernote('code').trim();
     console.log(vaild_c);

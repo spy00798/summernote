@@ -97,10 +97,6 @@ public class BoardService {
 
     public void BoardUpdate(BoardDTO boardDTO, MultipartHttpServletRequest request, FileDTO fileDTO) {
 
-        List<FileDTO> originalFiles = boardMapper.findFile(boardDTO);
-
-
-
         List<MultipartFile> requestFiles = request.getFiles("file");
         String path = "C:\\images\\";
         for(MultipartFile mf : requestFiles) {
