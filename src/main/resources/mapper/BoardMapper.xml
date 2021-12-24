@@ -3,7 +3,7 @@
 <mapper namespace="com.board.summernote.database.mapper.BoardMapper">
     
     <select id="findAll" resultType="com.board.summernote.database.dto.BoardDTO">
-        SELECT * FROM tbl_board
+        SELECT * FROM tbl_board order by idx desc
     </select>
 
     <select id="findByIdx" parameterType="com.board.summernote.database.dto.BoardDTO" resultType="com.board.summernote.database.dto.BoardDTO">
@@ -20,6 +20,26 @@
 
     <delete id="removeByIdx" parameterType="com.board.summernote.database.dto.BoardDTO">
         DELETE FROM tbl_board WHERE idx = #{idx}
+    </delete>
+
+    <insert id="insertFile" parameterType="com.board.summernote.database.dto.FileDTO">
+        INSERT INTO tfile(filename, ref_idx, filesize, ext, uuid, path, ord, ref_type) values(#{filename}, (select idx from tbl_board order by idx desc LIMIT 1), #{filesize}, #{ext}, #{uuid}, #{path}, #{ord}, #{refType});
+    </insert>
+
+    <select id="findFile" parameterType="com.board.summernote.database.dto.BoardDTO" resultType="com.board.summernote.database.dto.FileDTO">
+       SELECT * FROM tfile where ref_idx = #{idx}
+    </select>
+
+    <select id="countFile" parameterType="com.board.summernote.database.dto.BoardDTO" resultType="int">
+        SELECT COUNT(*) as filecnt FROM tfile WHERE ref_idx = #{idx};
+    </select>
+
+    <delete id="deleteFile" parameterType="com.board.summernote.database.dto.BoardDTO">
+        DELETE FROM tfile WHERE ref_idx = #{idx}
+    </delete>
+
+    <delete id="deleteFileByOrd" parameterType="com.board.summernote.database.dto.FileDTO">
+        DELETE FROM tfile WHERE ref_idx = #{refIdx} AND ord = #{ord}
     </delete>
 
 </mapper>

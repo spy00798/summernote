@@ -2,6 +2,7 @@ package com.board.summernote.Controller;
 
 import com.board.summernote.Service.BoardService;
 import com.board.summernote.database.dto.BoardDTO;
+import com.board.summernote.database.dto.FileDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/")
@@ -28,30 +32,36 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/view")
-    public String ViewPage(BoardDTO boardDTO, Model model) {
-        return boardService.ViewPage(boardDTO, model);
+    public String ViewPage(BoardDTO boardDTO, Model model, FileDTO fileDTO) {
+        return boardService.ViewPage(boardDTO, model, fileDTO);
     }
 
     @RequestMapping(value = "/update")
-    public String UpdatePage(BoardDTO boardDTO, Model model) {
-        return boardService.UpdatePage(boardDTO, model);
+    public String UpdatePage(BoardDTO boardDTO, Model model, FileDTO fileDTO) {
+        return boardService.UpdatePage(boardDTO, model, fileDTO);
     }
 
     @ResponseBody
     @RequestMapping(value = "/update.do")
-    public void BoardUpdate(BoardDTO boardDTO) {
-        boardService.BoardUpdate(boardDTO);
+    public void BoardUpdate(BoardDTO boardDTO, MultipartHttpServletRequest request, FileDTO fileDTO) {
+        boardService.BoardUpdate(boardDTO, request, fileDTO);
     }
 
     @ResponseBody
     @RequestMapping(value = "/insert.do", method = RequestMethod.POST)
-    public void BoardInsert(BoardDTO boardDTO, MultipartFile[] files) {
-         boardService.BoardInsert(boardDTO, files);
+    public void BoardInsert(BoardDTO boardDTO, MultipartHttpServletRequest request, FileDTO fileDTO) {
+         boardService.BoardInsert(boardDTO, request, fileDTO);
     }
 
     @ResponseBody
     @RequestMapping(value = "delete.do" ,method = RequestMethod.POST)
     public void BoardDelete(BoardDTO boardDTO) {
         boardService.BoardDelete(boardDTO);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "selectfile.do", method = RequestMethod.POST)
+    public List<FileDTO> SelectFileList(BoardDTO boardDTO) {
+        return boardService.SelectFileList(boardDTO);
     }
 }

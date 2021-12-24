@@ -20,25 +20,15 @@
 <body>
 <%@ include file="./static/header.jsp" %>
 <div id="wrap">
+    <input type="hidden" id="idx" value="${board.idx}">
     <form>
-        <table border="1">
-            <thead>
-            <tr>
-                <th class="board_column">작성일</th>
-                <th><fmt:formatDate value="${board.bdDate}" pattern="yyyy-MM-dd" /></th>
-            </tr>
-            <tr>
-                <th class="board_column">제목</th>
-                <th>${board.title}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <th class="board_column">내용</th>
-                <td class="view_area">${board.content}</td>
-            </tr>
-            </tbody>
-        </table>
+        <fieldset>
+            <p class="form-element">제목 : <input type="text" id="title_slot" readonly value="${board.title}"></p>
+            <ul id="file-view">
+
+            </ul>
+            <div id="view_area">${board.content}</div>
+        </fieldset>
         <div class="btn_area">
             <input type="button" onclick="location.href = '/';" value="뒤로" class="replace_btn"/>
             <input type="button" onclick="location.href = '/update?idx=${board.idx}'" value="수정" class="ins_btn"/>

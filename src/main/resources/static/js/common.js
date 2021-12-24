@@ -1,4 +1,7 @@
 var fileTemp = [];
+let imgExt = /(.*?)\.(jpg|jpeg|png|gif|bmp)$/;
+let url = $(location).attr('href');
+let maxfile = 5;
 
 
 $(document).ready(function () {
@@ -13,46 +16,118 @@ $(document).ready(function () {
     });
 
     $('#ins_file').change(function () {
-        let fileList = $('#ins_file')[0].files;
+        let fileList = this.files;
         console.log(fileList);
 
+        [].forEach.call(fileList, item => {
+            let fileExt = item.name.substring(item.name.lastIndexOf("."), item.name.length);
 
+            console.log(fileExt);
 
-        for (var i = 0; i < fileList.length; i++) {
-
-            var sizefmt = '';
-
-            if (fileList[i].size > (1024 ** 2)) {
-                sizefmt = (fileList[i].size / (1024 ** 2)).toFixed(2) + "MB";
-            } else if (fileList[i].size > (1024)) {
-                sizefmt = (fileList[i].size / 1024).toFixed(2) + "KB";
+            if (!fileExt.toLowerCase().match(imgExt)) {
+                alert("이미지 타입의 파일만 업로드 할 수 있습니다.")
             } else {
-                sizefmt = fileList[i].size.toFixed(2) + "B";
 
-            }
+                let reader = new FileReader();
 
-            let str = '<li>' + fileList[i].name + ' (' + sizefmt + ')' + '<button type="button" class="del_file" onclick="deleteFile(this);">&#10005;</button></li>';
+                reader.onload = function() {
+                    var sizefmt = '';
 
-            if(($('#file-list > li').length + 1) <= 5) {
-                console.log($('#file-list > li').length);
-                $('#file-list').append(str);
-                fileTemp.push(fileList[i]);
-            } else {
-                alert("파일은 최대 5개까지만 업로드 할 수 있습니다.");
+                    if (item.size > (1024 ** 2)) {
+                        sizefmt = (item.size / (1024 ** 2)).toFixed(2) + "MB";
+                    } else if (item.size > (1024)) {
+                        sizefmt = (item.size / 1024).toFixed(2) + "KB";
+                    } else {
+                        sizefmt = item.size.toFixed(2) + "B";
 
-            }
+                    }
 
-        };
+                    let str = '<li>' + item.name + ' (' + sizefmt + ')' + '<button type="button" class="del_file" onclick="deleteFile(this);">&#10005;</button></li>';
 
+                    if(($('#file-list > li').length + 1) <= maxfile) {
+                        console.log($('#file-list > li').length);
+                        $('#file-list').append(str);
+
+                        fileTemp.push(item);
+                    } else {
+                        alert("파일은 최대 5개까지만 업로드 할 수 있습니다.");
+                    }
+                }
+                reader.readAsDataURL(item);
+
+            };
+
+
+        });
         $('#ins_file').val("");
     });
+
+    if(url.indexOf("/view") != -1) {
+        let param = {
+            idx: $('#idx').val()
+        };
+
+        $.ajax({
+            url: 'selectfile.do',
+            type: 'POST',
+            data: param,
+            success: function (result) {
+                for (var i = 0; i < result.length; i++) {
+                    var sizefmt = '';
+                    if (result[i].filesize > (1024 ** 2)) {
+                        sizefmt = (result[i].filesize / (1024 ** 2)).toFixed(2) + "MB";
+                    } else if (result[i].filesize > (1024)) {
+                        sizefmt = (result[i].filesize / 1024).toFixed(2) + "KB";
+                    } else {
+                        sizefmt = result[i].filesize.toFixed(2) + "B";
+
+                    }
+                    let str = '<li>' + result[i].filename + "." + result[i].ext + ' (' + sizefmt + ')' + '</li>';
+                    $('#file-view').append(str);
+                }
+            },
+            error: function () {
+                alert("통신실패");
+            }
+        })
+    } else if(url.indexOf("/update") != -1) {
+        let param = {
+            idx: $('#idx').val()
+        };
+        $.ajax({
+            url: 'selectfile.do',
+            type: 'POST',
+            data: param,
+            success: function (result) {
+                for (var i = 0; i < result.length; i++) {
+                    var sizefmt = '';
+                    if (result[i].filesize > (1024 ** 2)) {
+                        sizefmt = (result[i].filesize / (1024 ** 2)).toFixed(2) + "MB";
+                    } else if (result[i].filesize > (1024)) {
+                        sizefmt = (result[i].filesize / 1024).toFixed(2) + "KB";
+                    } else {
+                        sizefmt = result[i].filesize.toFixed(2) + "B";
+
+                    }
+                    let str = '<li>' + result[i].filename + "." + result[i].ext + ' (' + sizefmt + ')' + '<button type="button" class="del_file" onclick="deleteFile(this);">&#10005;</button></li>';
+                    $('#file-list').append(str);
+                }
+            },
+            error: function () {
+                alert("통신실패");
+            }
+        });
+    }
 });
 
 function insertRow() {
     let form  = $('#insertForm')[0];
     let data = new FormData(form);
+    data.append('title', $('#title_slot').val());
+    data.append('content', $('#summernote').summernote('code'));
     for(var j = 0; j < fileTemp.length; j++) {
-        data.append('filename', fileTemp[j]);
+        data.append('file', fileTemp[j]);
+
     }
     console.log(data);
 
@@ -81,25 +156,35 @@ function insertRow() {
 }
 
 function updateRow() {
-    let param = {
-        idx: $('#idx').val(),
-        title: $('#title_slot').val(),
-        content: $('#summernote').summernote('code')
-    }
+    let updateForm = $('#update-form')[0];
+    let formdata = new FormData(updateForm);
+    formdata.append('idx', $('#idx').val());
+    formdata.append('title', $('#title_slot').val());
+    formdata.append('content', $('#summernote').summernote('code'));
 
-    if (param.title.trim() == "") {
+    for(var j = 0; j < fileTemp.length; j++) {
+        formdata.append('file', fileTemp[j]);
+    }
+    var vaild_t = $('#title_slot').val().trim();
+    var vaild_c = $('#summernote').summernote('code').trim();
+    console.log(vaild_c);
+
+    if (vaild_t == "") {
         alert("제목을 입력해주세요.")
-    } else if (param.content.trim() == "") {
+    } else if (vaild_c == "") {
         alert("내용을 입력해주세요.")
     } else {
 
         $.ajax({
             url: "update.do",
             type: "post",
-            data: param,
+            data: formdata,
+            cache: false,
+            processData: false,
+            contentType: false,
             success: function () {
                 alert("수정 완료");
-                location.replace("/view?idx=" + param.idx);
+                location.replace("/view?idx=" + $('#idx').val());
             },
             error: function () {
                 alert("통신 실패");
@@ -131,6 +216,7 @@ function deleteRow() {
 function deleteFile(e) {
     var index = $(".del_file").index(e);
 
+    fileTemp.splice(index, 1);
     $('#file-list > li:eq('+ index +')').remove();
 
 }

@@ -27,24 +27,15 @@
 <%@ include file="./static/header.jsp" %>
 <div id="wrap">
     <input type="hidden" id="idx" value="${board.idx}">
-    <form>
-        <table border="1">
-            <thead>
+    <form id="update-form" enctype="multipart/form-data">
+        <fieldset>
+            <p class="form-element">제목 : <input type="text" id="title_slot" value="${board.title}"></p>
+            <p class="form-element">첨부파일 : <input type="file" accept="image/*" id="ins_file" multiple></p>
+            <ul id="file-list">
 
-            <tr>
-                <th class="board_column">제목</th>
-                <th><input type="text" id="title_slot" value="${board.title}"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <th class="board_column">내용</th>
-                <td>
-                    <div id="summernote">${board.content}</div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            </ul>
+            <div id="summernote">${board.content}</div>
+        </fieldset>
         <div class="btn_area">
             <input type="button" onclick="history.back();" value="뒤로" class="replace_btn"/>
             <input type="button" onclick="deleteRow()" class="del_btn" value="삭제" />

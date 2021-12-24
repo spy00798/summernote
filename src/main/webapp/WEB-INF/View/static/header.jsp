@@ -7,5 +7,5 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <header>
-    <p>게시판</p>
+    <p><a href="/">게시판</a></p>
 </header>
