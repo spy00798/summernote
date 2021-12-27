@@ -3,7 +3,6 @@ let imgExt = /(.*?)\.(jpg|jpeg|png|gif|bmp)$/;
 let url = $(location).attr('href');
 let maxfile = 5;
 let cnt = 0;
-let orgFile = [];
 
 
 
@@ -21,6 +20,7 @@ $(document).ready(function () {
     $('#ins_file').change(function () {
         let fileList = this.files;
         console.log(fileList);
+
 
         [].forEach.call(fileList, item => {
             let fileExt = item.name.substring(item.name.lastIndexOf("."), item.name.length);
@@ -115,6 +115,12 @@ $(document).ready(function () {
                     let str = '<li id="'+ cnt +'">' + result[i].filename + "." + result[i].ext + ' (' + sizefmt + ')' + '<button type="button" class="del_file" onclick="deleteFile(this);">&#10005;</button></li>';
                     $('#file-list').append(str);
 
+                    fileTemp.push({
+                        filename: result[i].filename,
+                        filesize: result[i].filesize,
+                        uuid:result[i].uuid,
+                        ext:result[i].ext
+                    });
                     cnt++;
 
                 }
@@ -131,9 +137,11 @@ function insertRow() {
     let data = new FormData(form);
     data.append('title', $('#title_slot').val());
     data.append('content', $('#summernote').summernote('code'));
-    for(var j = 0; j < fileTemp.length; j++) {
-        data.append('file', fileTemp[j]);
-    }
+    let itemList = document.querySelectorAll("#file-list > li");
+    [].forEach.call(itemList, item => {
+        data.append('file', fileTemp[item.id])
+    })
+
     console.log(data);
 
     if ($('#title_slot').val().trim() == "") {
@@ -167,12 +175,34 @@ function updateRow() {
     formdata.append('title', $('#title_slot').val());
     formdata.append('content', $('#summernote').summernote('code'));
     let itemList = document.querySelectorAll("#file-list > li");
+    let fileindex = 1;
+    let ordList = [];
     console.log(fileTemp);
     [].forEach.call(itemList, item =>{
-
+        if (typeof fileTemp[item.id].filename === 'undefined') { //파일정보를 조회한데이터에서 파일이름이 정의되었는지를 기준으로 기존 파일과 신규 파일을 분류함 
+            formdata.append('fileList', fileTemp[item.id]);
+            fileindex++;
+        } else {
+            formdata.append('filenameList', fileTemp[item.id].filename);
+            formdata.append('filesizeList', fileTemp[item.id].filesize);
+            formdata.append('uuidList', fileTemp[item.id].uuid);
+            formdata.append('extList', fileTemp[item.id].ext);
+            ordList.push(fileindex);
+            fileindex++;
+        }
     });
 
-    console.log(fileTemp)
+    //[2,4] => [2,4,1,3,5]
+    for(let i = 1; i <= itemList.length; i++) {
+        if(ordList.indexOf(i) == -1) {
+            ordList.push(i);
+        }
+    }
+
+    [].forEach.call(ordList, ord => {
+        formdata.append('ordList', ord);
+    });
+
     var vaild_t = $('#title_slot').val().trim();
     var vaild_c = $('#summernote').summernote('code').trim();
     console.log(vaild_c);
@@ -224,7 +254,5 @@ function deleteRow() {
 function deleteFile(e) {
     var index = $(".del_file").index(e);
 
-    fileTemp.splice(index, 1);
     $('#file-list > li:eq('+ index +')').remove();
-
 }

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -95,10 +96,35 @@ public class BoardService {
         boardMapper.removeByIdx(boardDTO);
     }
 
-    public void BoardUpdate(BoardDTO boardDTO, MultipartHttpServletRequest request, FileDTO fileDTO) {
+    public void BoardUpdate(BoardDTO boardDTO, MultipartHttpServletRequest request, FileDTO fileDTO, List<Integer> ordList) {
+        boardMapper.deleteFile(boardDTO); //reset File
 
-        List<MultipartFile> requestFiles = request.getFiles("file");
+        List<MultipartFile> requestFiles = request.getFiles("fileList");
         String path = "C:\\images\\";
+
+        int fileindex = 0;
+
+        List<String> filenameList = fileDTO.getFilenameList();
+        List<String> filesizeList = fileDTO.getFilesizeList();
+        List<String> uuidList = fileDTO.getUuidList();
+        List<String> extList = fileDTO.getExtList();
+
+        //기존파일 Update처리
+        for (int i = 0; i < filenameList.size(); i++) {
+            System.out.println(i);
+            fileDTO.setFilename(filenameList.get(i));
+            fileDTO.setFilesize(Long.parseLong(filesizeList.get(i)));
+            fileDTO.setUuid(uuidList.get(i));
+            fileDTO.setExt(extList.get(i));
+            fileDTO.setPath(path);
+            fileDTO.setOrd(ordList.get(fileindex));
+            fileDTO.setRefIdx(boardDTO.getIdx());
+            fileDTO.setRefType("notice");
+            boardMapper.insertFile(fileDTO);
+            fileindex++;
+        }
+
+        // 신규파일 등록 처리
         for(MultipartFile mf : requestFiles) {
             System.out.println("----added file----");
             String orgname = mf.getOriginalFilename();
@@ -111,13 +137,24 @@ public class BoardService {
             fileDTO.setFilesize(fileSize);
             fileDTO.setExt(extension);
             fileDTO.setUuid(String.valueOf(uuid));
+            fileDTO.setOrd(ordList.get(fileindex));
             fileDTO.setRefIdx(boardDTO.getIdx());
             fileDTO.setRefType("notice");
-        }
 
-        boardMapper.deleteFile(boardDTO);
-        boardMapper.insertFile(fileDTO);
+            String saveFile = path + uuid + "." + extension;
+
+            try {
+                mf.transferTo(new File(saveFile));
+                boardMapper.insertFile(fileDTO);
+                fileindex++;
+            } catch (IllegalStateException e) {
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         boardMapper.updateByIdx(boardDTO);
+
     }
 
     public List<FileDTO> SelectFileList(BoardDTO boardDTO) {

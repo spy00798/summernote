@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -43,8 +44,8 @@ public class BoardController {
 
     @ResponseBody
     @RequestMapping(value = "/update.do")
-    public void BoardUpdate(BoardDTO boardDTO, MultipartHttpServletRequest request, FileDTO fileDTO) {
-        boardService.BoardUpdate(boardDTO, request, fileDTO);
+    public void BoardUpdate(BoardDTO boardDTO, MultipartHttpServletRequest request, FileDTO fileDTO, @RequestParam(value = "ordList", required = false) List<Integer> ordlist) {
+        boardService.BoardUpdate(boardDTO, request, fileDTO, ordlist);
     }
 
     @ResponseBody
