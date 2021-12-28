@@ -7,6 +7,9 @@ let cnt = 0;
 
 
 $(document).ready(function () {
+    /**
+     * FUNCTION:: Summernote라이브러리 사용해서 문서 에디터 설정
+     */
     $("#summernote").summernote({
         width: 1000,
         height: 300,
@@ -17,6 +20,9 @@ $(document).ready(function () {
         placeholder: '내용을 입력해주세요.',
     });
 
+    /**
+     * FUNCTION:: id가 ins_file인 input[type=file]태그에 파일을 선택 시 실행되는 함수
+     */
     $('#ins_file').change(function () {
         let fileList = this.files;
         console.log(fileList);
@@ -156,9 +162,18 @@ function insertRow() {
             cache: false,
             contentType: false,
             processData: false,
-            success: function () {
-                alert("등록 완료");
-                location.replace("/");
+            success: function (data) {
+                console.log(data);
+                if(data == "request error") {
+                    alert("요청하는 도중 오류가 발생하였습니다.");
+                    return;
+                } else if(data == "File error") {
+                    alert("파일을 업로드하는 도중 오류가 발생하였습니다.");
+                    return;
+                } else {
+                    alert("등록 완료");
+                    location.replace("/");
+                }
             },
             error: function () {
                 alert("통신실패");
@@ -220,7 +235,8 @@ function updateRow() {
             cache: false,
             processData: false,
             contentType: false,
-            success: function () {
+            success: function (data) {
+                console.log(data);
                 alert("수정 완료");
                 location.replace("/view?idx=" + $('#idx').val());
             },

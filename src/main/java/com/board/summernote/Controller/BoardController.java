@@ -23,8 +23,8 @@ public class BoardController {
     private final BoardService boardService;
 
     @RequestMapping(value = "/")
-    public String ListPage(BoardDTO boardDTO, Model model) {
-        return boardService.ListPage(boardDTO, model);
+    public String ListPage(Model model) {
+        return boardService.ListPage(model);
     }
 
     @RequestMapping(value = "/form")
@@ -44,14 +44,14 @@ public class BoardController {
 
     @ResponseBody
     @RequestMapping(value = "/update.do")
-    public void BoardUpdate(BoardDTO boardDTO, MultipartHttpServletRequest request, FileDTO fileDTO, @RequestParam(value = "ordList", required = false) List<Integer> ordlist) {
-        boardService.BoardUpdate(boardDTO, request, fileDTO, ordlist);
+    public String BoardUpdate(BoardDTO boardDTO, MultipartHttpServletRequest request, FileDTO fileDTO, @RequestParam(value = "ordList", required = false) List<Integer> ordlist) {
+        return boardService.BoardUpdate(boardDTO, request, fileDTO, ordlist);
     }
 
     @ResponseBody
     @RequestMapping(value = "/insert.do", method = RequestMethod.POST)
-    public void BoardInsert(BoardDTO boardDTO, MultipartHttpServletRequest request, FileDTO fileDTO) {
-         boardService.BoardInsert(boardDTO, request, fileDTO);
+    public String BoardInsert(BoardDTO boardDTO, MultipartHttpServletRequest request, FileDTO fileDTO) {
+        return boardService.BoardInsert(boardDTO, request, fileDTO);
     }
 
     @ResponseBody
